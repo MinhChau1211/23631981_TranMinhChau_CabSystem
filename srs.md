@@ -102,7 +102,7 @@ Có 4 vùng:
 
 4. Mermaid Stakeholder Matrix
 
-![alt text](image.png)
+![Stakeholder Matrix](./stakeholder-matrix.png)
 
 ## **B3: Xác định mục tiêu nghiệp vụ:**
 liệt kê ra vd:
@@ -511,7 +511,7 @@ Trip 1 ─────── N Notification
 
 3. Mermaid ERD
 
-![alt text](image-1.png)
+![data modeling](./data-modeling.png)
 
 ## **B10: xác định những cái chức năng không phải là yêu cầu**
 Vd hệ thống thiết kệ ở giai đoạn mbd thì không cần thiết lắm 
