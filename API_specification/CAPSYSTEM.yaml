@@ -1,1 +1,1217 @@
+openapi: 3.0.3
+info:
+  title: CAB System REST API
+  description: 'REST API documentation for the CAB System.
 
+    The API is derived from the Business Requirements (BR) and Functional
+
+    Requirements (FR) from B7 - Phân rã yêu cầu nghiệp vụ.
+
+    '
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/api
+  description: Local development server
+tags:
+- name: Rides
+  description: Đặt, theo dõi và thực hiện chuyến xe
+- name: Drivers
+  description: Tìm kiếm và phân công tài xế
+- name: Fare
+  description: Tính và xem cước chuyến xe
+- name: Payments
+  description: Thanh toán chuyến xe
+- name: Notifications
+  description: Thông báo cho khách hàng và tài xế
+- name: Users
+  description: Quản lý khách hàng và tài xế
+- name: Vehicles
+  description: Quản lý phương tiện
+- name: Operations
+  description: Quản lý vận hành và tra cứu giao dịch
+- name: Ratings
+  description: Đánh giá tài xế
+- name: Reports
+  description: Lịch sử chuyến và báo cáo hoạt động
+paths:
+  /rides:
+    post:
+      tags:
+      - Rides
+      summary: Đặt chuyến xe
+      description: Tạo yêu cầu đặt chuyến với điểm đón, điểm đến, loại xe và yêu cầu
+        ưu tiên tài xế rating cao.
+      operationId: createRide
+      x-fr:
+      - FR01
+      - FR02
+      - FR03
+      - FR04
+      x-br:
+      - BR01
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRideRequest'
+      responses:
+        '201':
+          description: Tạo chuyến thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ride'
+        '400':
+          description: Dữ liệu đặt chuyến không hợp lệ
+        '409':
+          description: Không có dịch vụ phù hợp
+  /rides/{rideId}:
+    get:
+      tags:
+      - Rides
+      summary: Xem thông tin chuyến
+      description: Xem tài xế, ETA và trạng thái chuyến.
+      operationId: getRide
+      x-fr:
+      - FR14
+      - FR15
+      - FR16
+      x-br:
+      - BR04
+      responses:
+        '200':
+          description: Thông tin chuyến
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ride'
+        '404':
+          description: Không tìm thấy chuyến
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+  /rides/{rideId}/dispatch:
+    post:
+      tags:
+      - Drivers
+      summary: Tìm và phân công tài xế
+      description: Tìm tài xế đang online, lọc tài xế sẵn sàng, xác định tài xế phù
+        hợp, ưu tiên tài xế gần khách và gửi yêu cầu.
+      operationId: dispatchDriver
+      x-fr:
+      - FR05
+      - FR06
+      - FR07
+      - FR08
+      - FR09
+      x-br:
+      - BR02
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DispatchRequest'
+      responses:
+        '200':
+          description: Đã gửi yêu cầu phân công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverOffer'
+        '404':
+          description: Không tìm thấy tài xế phù hợp
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+  /rides/{rideId}/driver-offer:
+    post:
+      tags:
+      - Drivers
+      summary: Tài xế phản hồi yêu cầu chuyến
+      description: Tài xế chấp nhận hoặc từ chối yêu cầu chuyến.
+      operationId: respondToRide
+      x-fr:
+      - FR10
+      - FR11
+      x-br:
+      - BR03
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverResponseRequest'
+      responses:
+        '200':
+          description: Đã ghi nhận phản hồi tài xế
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ride'
+        '400':
+          description: Phản hồi không hợp lệ
+        '409':
+          description: Yêu cầu chuyến không còn hiệu lực
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+  /rides/{rideId}/redispatch:
+    post:
+      tags:
+      - Drivers
+      summary: Tìm tài xế khác
+      description: Xử lý trường hợp tài xế không phản hồi hoặc từ chối và gửi yêu
+        cầu cho tài xế khác.
+      operationId: redispatchRide
+      x-fr:
+      - FR12
+      - FR13
+      x-br:
+      - BR03
+      responses:
+        '200':
+          description: Đã tìm và gửi lại cho tài xế khác
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverOffer'
+        '404':
+          description: Không còn tài xế phù hợp
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+  /drivers/available:
+    get:
+      tags:
+      - Drivers
+      summary: Xem tài xế đang online và sẵn sàng
+      description: Lọc các tài xế online trong khu vực phục vụ theo vị trí khách hàng.
+      operationId: getAvailableDrivers
+      x-fr:
+      - FR01
+      - FR02
+      - FR05
+      - FR06
+      x-br:
+      - BR02
+      parameters:
+      - name: latitude
+        in: query
+        required: true
+        schema:
+          type: number
+          format: double
+          example: 10.7769
+      - name: longitude
+        in: query
+        required: true
+        schema:
+          type: number
+          format: double
+          example: 106.7009
+      - name: radiusKm
+        in: query
+        required: false
+        schema:
+          type: number
+          format: double
+          default: 5
+          example: 5
+      - name: vehicleType
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/VehicleType'
+      - name: prioritizeHighRating
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Danh sách tài xế phù hợp
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+  /rides/{rideId}/tracking:
+    get:
+      tags:
+      - Rides
+      summary: Theo dõi chuyến xe
+      description: Xem vị trí tài xế, ETA và trạng thái chuyến.
+      operationId: trackRide
+      x-fr:
+      - FR14
+      - FR15
+      - FR16
+      x-br:
+      - BR04
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+      - $ref: '#/components/parameters/RideId'
+      responses:
+        '200':
+          description: Dữ liệu theo dõi chuyến
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RideTracking'
+  /rides/{rideId}/status:
+    patch:
+      tags:
+      - Rides
+      summary: Cập nhật trạng thái chuyến
+      description: Cập nhật các trạng thái đã đến, đã đón, đang di chuyển và hoàn
+        thành.
+      operationId: updateRideStatus
+      x-fr:
+      - FR17
+      - FR18
+      - FR19
+      - FR20
+      x-br:
+      - BR05
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+      - $ref: '#/components/parameters/RideId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRideStatusRequest'
+      responses:
+        '200':
+          description: Cập nhật trạng thái thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ride'
+        '400':
+          description: Trạng thái không hợp lệ
+        '409':
+          description: Không thể chuyển trạng thái
+  /rides/{rideId}/fare:
+    get:
+      tags:
+      - Fare
+      summary: Tính và xem cước chuyến xe
+      description: Xác định cước và hiển thị số tiền.
+      operationId: getFare
+      x-fr:
+      - FR21
+      - FR22
+      x-br:
+      - BR07
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+      - $ref: '#/components/parameters/RideId'
+      responses:
+        '200':
+          description: Thông tin cước
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fare'
+        '404':
+          description: Không tìm thấy chuyến
+  /rides/{rideId}/payments:
+    post:
+      tags:
+      - Payments
+      summary: Thanh toán chuyến xe
+      description: Thanh toán bằng tiền mặt hoặc phương thức điện tử.
+      operationId: createPayment
+      x-fr:
+      - FR23
+      - FR24
+      - FR25
+      x-br:
+      - BR08
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+      - $ref: '#/components/parameters/RideId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '201':
+          description: Thanh toán thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          description: Dữ liệu thanh toán không hợp lệ
+        '402':
+          description: Thanh toán thất bại hoặc bị từ chối
+  /notifications:
+    get:
+      tags:
+      - Notifications
+      summary: Xem danh sách thông báo
+      description: Xem thông báo đặt xe, tài xế, chuyến và thanh toán.
+      operationId: getNotifications
+      x-fr:
+      - FR26
+      - FR27
+      - FR28
+      - FR29
+      x-br:
+      - BR10
+      parameters:
+      - name: userId
+        in: query
+        required: true
+        schema:
+          type: string
+          example: USR001
+      - name: unreadOnly
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Danh sách thông báo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+  /users/customers:
+    get:
+      tags:
+      - Users
+      summary: Quản lý khách hàng - danh sách
+      operationId: listCustomers
+      x-fr:
+      - FR30
+      x-br:
+      - BR11
+      - BR12
+      responses:
+        '200':
+          description: Danh sách khách hàng
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+    post:
+      tags:
+      - Users
+      summary: Quản lý khách hàng - tạo mới
+      operationId: createCustomer
+      x-fr:
+      - FR30
+      x-br:
+      - BR11
+      - BR12
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+      responses:
+        '201':
+          description: Tạo khách hàng thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+  /users/drivers:
+    get:
+      tags:
+      - Users
+      summary: Quản lý tài xế - danh sách
+      operationId: listDrivers
+      x-fr:
+      - FR31
+      x-br:
+      - BR11
+      - BR12
+      responses:
+        '200':
+          description: Danh sách tài xế
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+    post:
+      tags:
+      - Users
+      summary: Quản lý tài xế - tạo mới
+      operationId: createDriver
+      x-fr:
+      - FR31
+      x-br:
+      - BR11
+      - BR12
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverRequest'
+      responses:
+        '201':
+          description: Tạo tài xế thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+  /vehicles:
+    get:
+      tags:
+      - Vehicles
+      summary: Quản lý phương tiện - danh sách
+      operationId: listVehicles
+      x-fr:
+      - FR32
+      x-br:
+      - BR11
+      - BR12
+      responses:
+        '200':
+          description: Danh sách phương tiện
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+    post:
+      tags:
+      - Vehicles
+      summary: Quản lý phương tiện - tạo mới
+      operationId: createVehicle
+      x-fr:
+      - FR32
+      x-br:
+      - BR11
+      - BR12
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleRequest'
+      responses:
+        '201':
+          description: Tạo phương tiện thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+  /operations/rides:
+    get:
+      tags:
+      - Operations
+      summary: Theo dõi tất cả chuyến
+      operationId: listOperationalRides
+      x-fr:
+      - FR33
+      x-br:
+      - BR13
+      - BR14
+      - BR15
+      responses:
+        '200':
+          description: Danh sách chuyến đang vận hành
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ride'
+  /operations/errors:
+    post:
+      tags:
+      - Operations
+      summary: Ghi nhận và xử lý lỗi vận hành
+      operationId: createOperationalError
+      x-fr:
+      - FR34
+      x-br:
+      - BR13
+      - BR14
+      - BR15
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorReportRequest'
+      responses:
+        '201':
+          description: Đã ghi nhận lỗi
+  /operations/transactions:
+    get:
+      tags:
+      - Operations
+      summary: Tra cứu giao dịch
+      operationId: listTransactions
+      x-fr:
+      - FR35
+      x-br:
+      - BR13
+      - BR14
+      - BR15
+      parameters:
+      - name: from
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: to
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Danh sách giao dịch
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+  /operations/roles:
+    get:
+      tags:
+      - Operations
+      summary: Xem và phân quyền
+      operationId: listRoles
+      x-fr:
+      - FR36
+      x-br:
+      - BR13
+      - BR14
+      - BR15
+      responses:
+        '200':
+          description: Danh sách quyền
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+  /rides/{rideId}/rating:
+    post:
+      tags:
+      - Ratings
+      summary: Đánh giá tài xế
+      description: Khách hàng đánh giá tài xế sau khi hoàn thành chuyến.
+      operationId: rateDriver
+      x-fr:
+      - FR37
+      x-br:
+      - BR16
+      - BR17
+      - BR18
+      parameters:
+      - $ref: '#/components/parameters/RideId'
+      - $ref: '#/components/parameters/RideId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingRequest'
+      responses:
+        '201':
+          description: Đánh giá thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+        '400':
+          description: Đánh giá không hợp lệ
+  /customers/{customerId}/rides/history:
+    get:
+      tags:
+      - Reports
+      summary: Xem lịch sử chuyến
+      operationId: getRideHistory
+      x-fr:
+      - FR38
+      x-br:
+      - BR16
+      - BR17
+      - BR18
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: CUS001
+      responses:
+        '200':
+          description: Lịch sử chuyến
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RideSummary'
+  /reports/operations:
+    get:
+      tags:
+      - Reports
+      summary: Báo cáo hoạt động
+      operationId: getOperationalReport
+      x-fr:
+      - FR39
+      x-br:
+      - BR16
+      - BR17
+      - BR18
+      parameters:
+      - name: from
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: to
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: Báo cáo hoạt động
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationalReport'
+components:
+  parameters:
+    RideId:
+      name: rideId
+      in: path
+      required: true
+      description: Mã chuyến xe
+      schema:
+        type: string
+        example: RIDE001
+  schemas:
+    Coordinate:
+      type: object
+      required:
+      - latitude
+      - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+          example: 10.7769
+        longitude:
+          type: number
+          format: double
+          example: 106.7009
+    Location:
+      type: object
+      required:
+      - address
+      - coordinate
+      properties:
+        address:
+          type: string
+          example: Đại học Công nghiệp TP.HCM
+        coordinate:
+          $ref: '#/components/schemas/Coordinate'
+    VehicleType:
+      type: string
+      enum:
+      - MOTORBIKE
+      - CAR_4_SEATS
+      - CAR_7_SEATS
+      example: CAR_4_SEATS
+    RideStatus:
+      type: string
+      enum:
+      - REQUESTED
+      - DRIVER_ASSIGNED
+      - DRIVER_ARRIVED
+      - PICKED_UP
+      - IN_PROGRESS
+      - COMPLETED
+      - CANCELLED
+      example: DRIVER_ASSIGNED
+    CreateRideRequest:
+      type: object
+      required:
+      - customerId
+      - pickup
+      - destination
+      - vehicleType
+      properties:
+        customerId:
+          type: string
+          example: CUS001
+        pickup:
+          $ref: '#/components/schemas/Location'
+        destination:
+          $ref: '#/components/schemas/Location'
+        vehicleType:
+          $ref: '#/components/schemas/VehicleType'
+        prioritizeHighRating:
+          type: boolean
+          description: Có ưu tiên tài xế có rating cao hay không
+          default: false
+        note:
+          type: string
+          example: Gọi khách khi đến nơi
+    Ride:
+      type: object
+      properties:
+        id:
+          type: string
+          example: RIDE001
+        customerId:
+          type: string
+          example: CUS001
+        driver:
+          $ref: '#/components/schemas/Driver'
+        pickup:
+          $ref: '#/components/schemas/Location'
+        destination:
+          $ref: '#/components/schemas/Location'
+        vehicleType:
+          $ref: '#/components/schemas/VehicleType'
+        status:
+          $ref: '#/components/schemas/RideStatus'
+        etaMinutes:
+          type: integer
+          example: 5
+        fare:
+          $ref: '#/components/schemas/Fare'
+    DispatchRequest:
+      type: object
+      properties:
+        prioritizeNearest:
+          type: boolean
+          default: true
+        prioritizeHighRating:
+          type: boolean
+          default: false
+        radiusKm:
+          type: number
+          format: double
+          default: 5
+          example: 5
+    DriverOffer:
+      type: object
+      properties:
+        offerId:
+          type: string
+          example: OFF001
+        rideId:
+          type: string
+          example: RIDE001
+        driverId:
+          type: string
+          example: DRI001
+        status:
+          type: string
+          enum:
+          - PENDING
+          - ACCEPTED
+          - REJECTED
+          - EXPIRED
+          example: PENDING
+        expiresAt:
+          type: string
+          format: date-time
+    DriverResponseRequest:
+      type: object
+      required:
+      - driverId
+      - response
+      properties:
+        driverId:
+          type: string
+          example: DRI001
+        response:
+          type: string
+          enum:
+          - ACCEPT
+          - REJECT
+          example: ACCEPT
+        reason:
+          type: string
+          example: Busy
+    Driver:
+      type: object
+      properties:
+        id:
+          type: string
+          example: DRI001
+        name:
+          type: string
+          example: Nguyen Van B
+        phone:
+          type: string
+          example: 0901234567
+        rating:
+          type: number
+          format: float
+          example: 4.8
+        online:
+          type: boolean
+          example: true
+        available:
+          type: boolean
+          example: true
+        location:
+          $ref: '#/components/schemas/Coordinate'
+        vehicle:
+          $ref: '#/components/schemas/Vehicle'
+    DriverRequest:
+      type: object
+      required:
+      - name
+      - phone
+      properties:
+        name:
+          type: string
+          example: Nguyen Van B
+        phone:
+          type: string
+          example: 0901234567
+    RideTracking:
+      type: object
+      properties:
+        rideId:
+          type: string
+          example: RIDE001
+        driverLocation:
+          $ref: '#/components/schemas/Coordinate'
+        etaMinutes:
+          type: integer
+          example: 4
+        status:
+          $ref: '#/components/schemas/RideStatus'
+        lastUpdated:
+          type: string
+          format: date-time
+    UpdateRideStatusRequest:
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          enum:
+          - DRIVER_ARRIVED
+          - PICKED_UP
+          - IN_PROGRESS
+          - COMPLETED
+          example: IN_PROGRESS
+    Fare:
+      type: object
+      properties:
+        rideId:
+          type: string
+          example: RIDE001
+        baseFare:
+          type: number
+          format: double
+          example: 20000
+        distanceFare:
+          type: number
+          format: double
+          example: 15000
+        total:
+          type: number
+          format: double
+          example: 35000
+        currency:
+          type: string
+          example: VND
+    PaymentRequest:
+      type: object
+      required:
+      - method
+      properties:
+        method:
+          type: string
+          enum:
+          - CASH
+          - E_WALLET
+          - BANK_TRANSFER
+          example: E_WALLET
+        amount:
+          type: number
+          format: double
+          example: 35000
+    Payment:
+      type: object
+      properties:
+        paymentId:
+          type: string
+          example: PAY001
+        rideId:
+          type: string
+          example: RIDE001
+        method:
+          type: string
+          enum:
+          - CASH
+          - E_WALLET
+          - BANK_TRANSFER
+          example: E_WALLET
+        status:
+          type: string
+          enum:
+          - PENDING
+          - SUCCESS
+          - FAILED
+          example: SUCCESS
+        amount:
+          type: number
+          format: double
+          example: 35000
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          example: NOTI001
+        type:
+          type: string
+          enum:
+          - RIDE_BOOKED
+          - DRIVER_ASSIGNED
+          - RIDE_STATUS
+          - PAYMENT
+          example: DRIVER_ASSIGNED
+        title:
+          type: string
+          example: Tài xế đã nhận chuyến
+        message:
+          type: string
+          example: Tài xế Nguyễn Văn B đang đến đón bạn.
+        read:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          example: CUS001
+        name:
+          type: string
+          example: Nguyen Van A
+        phone:
+          type: string
+          example: 0912345678
+        email:
+          type: string
+          example: nguyenvana@gmail.com
+    CustomerRequest:
+      type: object
+      required:
+      - name
+      - phone
+      properties:
+        name:
+          type: string
+          example: Nguyen Van A
+        phone:
+          type: string
+          example: 0912345678
+        email:
+          type: string
+          example: nguyenvana@gmail.com
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: string
+          example: VEH001
+        plateNumber:
+          type: string
+          example: 51A-12345
+        type:
+          $ref: '#/components/schemas/VehicleType'
+        active:
+          type: boolean
+          example: true
+    VehicleRequest:
+      type: object
+      required:
+      - plateNumber
+      - type
+      properties:
+        plateNumber:
+          type: string
+          example: 51A-12345
+        type:
+          $ref: '#/components/schemas/VehicleType'
+    ErrorReportRequest:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          example: DRIVER_NOT_RESPONDING
+        message:
+          type: string
+          example: Tài xế không phản hồi yêu cầu chuyến
+        rideId:
+          type: string
+          example: RIDE001
+        severity:
+          type: string
+          enum:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+          example: MEDIUM
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          example: TXN001
+        rideId:
+          type: string
+          example: RIDE001
+        type:
+          type: string
+          example: PAYMENT
+        amount:
+          type: number
+          format: double
+          example: 35000
+        status:
+          type: string
+          example: SUCCESS
+        createdAt:
+          type: string
+          format: date-time
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ROLE_ADMIN
+        name:
+          type: string
+          example: Administrator
+        permissions:
+          type: array
+          items:
+            type: string
+          example:
+          - RIDE_VIEW
+          - TRANSACTION_VIEW
+          - USER_MANAGE
+    RatingRequest:
+      type: object
+      required:
+      - customerId
+      - score
+      properties:
+        customerId:
+          type: string
+          example: CUS001
+        score:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        comment:
+          type: string
+          example: Tài xế lịch sự và đúng giờ.
+    Rating:
+      type: object
+      properties:
+        id:
+          type: string
+          example: RAT001
+        rideId:
+          type: string
+          example: RIDE001
+        driverId:
+          type: string
+          example: DRI001
+        score:
+          type: integer
+          example: 5
+        comment:
+          type: string
+          example: Tài xế lịch sự và đúng giờ.
+    RideSummary:
+      type: object
+      properties:
+        rideId:
+          type: string
+          example: RIDE001
+        pickup:
+          type: string
+          example: Đại học Công nghiệp TP.HCM
+        destination:
+          type: string
+          example: Sân bay Tân Sơn Nhất
+        driverName:
+          type: string
+          example: Nguyen Van B
+        fare:
+          type: number
+          format: double
+          example: 35000
+        status:
+          $ref: '#/components/schemas/RideStatus'
+        completedAt:
+          type: string
+          format: date-time
+    OperationalReport:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date
+        to:
+          type: string
+          format: date
+        totalRides:
+          type: integer
+          example: 1250
+        completedRides:
+          type: integer
+          example: 1180
+        cancelledRides:
+          type: integer
+          example: 70
+        totalRevenue:
+          type: number
+          format: double
+          example: 42000000
