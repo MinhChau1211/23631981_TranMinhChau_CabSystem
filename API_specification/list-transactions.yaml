@@ -1,0 +1,33 @@
+get:
+  tags:
+  - Operations
+  summary: Tra cứu giao dịch
+  operationId: listTransactions
+  x-fr:
+  - FR35
+  x-br:
+  - BR13
+  - BR14
+  - BR15
+  parameters:
+  - name: from
+    in: query
+    required: false
+    schema:
+      type: string
+      format: date
+  - name: to
+    in: query
+    required: false
+    schema:
+      type: string
+      format: date
+  responses:
+    '200':
+      description: Danh sách giao dịch
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Transaction'

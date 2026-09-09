@@ -1,0 +1,56 @@
+get:
+  tags:
+  - Drivers
+  summary: Xem tài xế đang online và sẵn sàng
+  description: Lọc các tài xế online trong khu vực phục vụ theo vị trí khách hàng.
+  operationId: getAvailableDrivers
+  x-fr:
+  - FR01
+  - FR02
+  - FR05
+  - FR06
+  x-br:
+  - BR02
+  parameters:
+  - name: latitude
+    in: query
+    required: true
+    schema:
+      type: number
+      format: double
+      example: 10.7769
+  - name: longitude
+    in: query
+    required: true
+    schema:
+      type: number
+      format: double
+      example: 106.7009
+  - name: radiusKm
+    in: query
+    required: false
+    schema:
+      type: number
+      format: double
+      default: 5
+      example: 5
+  - name: vehicleType
+    in: query
+    required: false
+    schema:
+      $ref: '#/components/schemas/VehicleType'
+  - name: prioritizeHighRating
+    in: query
+    required: false
+    schema:
+      type: boolean
+      default: false
+  responses:
+    '200':
+      description: Danh sách tài xế phù hợp
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Driver'

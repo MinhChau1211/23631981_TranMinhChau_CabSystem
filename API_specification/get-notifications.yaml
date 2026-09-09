@@ -1,0 +1,35 @@
+get:
+  tags:
+  - Notifications
+  summary: Xem danh sách thông báo
+  description: Xem thông báo đặt xe, tài xế, chuyến và thanh toán.
+  operationId: getNotifications
+  x-fr:
+  - FR26
+  - FR27
+  - FR28
+  - FR29
+  x-br:
+  - BR10
+  parameters:
+  - name: userId
+    in: query
+    required: true
+    schema:
+      type: string
+      example: USR001
+  - name: unreadOnly
+    in: query
+    required: false
+    schema:
+      type: boolean
+      default: false
+  responses:
+    '200':
+      description: Danh sách thông báo
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Notification'

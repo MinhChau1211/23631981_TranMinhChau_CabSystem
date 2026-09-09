@@ -1,0 +1,31 @@
+post:
+  tags:
+  - Drivers
+  summary: Tìm và phân công tài xế
+  description: Tìm tài xế đang online, lọc tài xế sẵn sàng, xác định tài xế phù hợp, ưu tiên tài xế gần khách và gửi yêu cầu.
+  operationId: dispatchDriver
+  x-fr:
+  - FR05
+  - FR06
+  - FR07
+  - FR08
+  - FR09
+  x-br:
+  - BR02
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/DispatchRequest'
+  responses:
+    '200':
+      description: Đã gửi yêu cầu phân công
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DriverOffer'
+    '404':
+      description: Không tìm thấy tài xế phù hợp
+  parameters:
+  - $ref: '#/components/parameters/RideId'

@@ -1,0 +1,617 @@
+openapi: 3.0.3
+info:
+  title: CAB System REST API
+  description: 'REST API documentation for the CAB System.
+
+    The API is derived from the Business Requirements (BR) and Functional
+
+    Requirements (FR) from B7 - Phân rã yêu cầu nghiệp vụ.
+
+    '
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/api
+  description: Local development server
+tags:
+- name: Rides
+  description: Đặt, theo dõi và thực hiện chuyến xe
+- name: Drivers
+  description: Tìm kiếm và phân công tài xế
+- name: Fare
+  description: Tính và xem cước chuyến xe
+- name: Payments
+  description: Thanh toán chuyến xe
+- name: Notifications
+  description: Thông báo cho khách hàng và tài xế
+- name: Users
+  description: Quản lý khách hàng và tài xế
+- name: Vehicles
+  description: Quản lý phương tiện
+- name: Operations
+  description: Quản lý vận hành và tra cứu giao dịch
+- name: Ratings
+  description: Đánh giá tài xế
+- name: Reports
+  description: Lịch sử chuyến và báo cáo hoạt động
+paths:
+  /rides:
+    post:
+      $ref: ./create-ride.yaml#/post
+  /rides/{rideId}:
+    get:
+      $ref: ./get-ride.yaml#/get
+  /rides/{rideId}/dispatch:
+    post:
+      $ref: ./dispatch-driver.yaml#/post
+  /rides/{rideId}/driver-offer:
+    post:
+      $ref: ./respond-to-driver.yaml#/post
+  /rides/{rideId}/redispatch:
+    post:
+      $ref: ./redispatch-ride.yaml#/post
+  /drivers/available:
+    get:
+      $ref: ./get-available-drivers.yaml#/get
+  /rides/{rideId}/tracking:
+    get:
+      $ref: ./track-ride.yaml#/get
+  /rides/{rideId}/status:
+    patch:
+      $ref: ./update-ride-status.yaml#/patch
+  /rides/{rideId}/fare:
+    get:
+      $ref: ./get-fare.yaml#/get
+  /rides/{rideId}/payments:
+    post:
+      $ref: ./create-payment.yaml#/post
+  /notifications:
+    get:
+      $ref: ./get-notifications.yaml#/get
+  /users/customers:
+    get:
+      $ref: ./list-customers.yaml#/get
+    post:
+      $ref: ./create-customer.yaml#/post
+  /users/drivers:
+    get:
+      $ref: ./list-drivers.yaml#/get
+    post:
+      $ref: ./create-driver.yaml#/post
+  /vehicles:
+    get:
+      $ref: ./list-vehicles.yaml#/get
+    post:
+      $ref: ./create-vehicle.yaml#/post
+  /operations/rides:
+    get:
+      $ref: ./list-operational-rides.yaml#/get
+  /operations/errors:
+    post:
+      $ref: ./report-operational-error.yaml#/post
+  /operations/transactions:
+    get:
+      $ref: ./list-transactions.yaml#/get
+  /operations/roles:
+    get:
+      $ref: ./list-roles.yaml#/get
+  /rides/{rideId}/rating:
+    post:
+      $ref: ./rate-driver.yaml#/post
+  /customers/{customerId}/rides/history:
+    get:
+      $ref: ./get-ride-history.yaml#/get
+  /reports/operations:
+    get:
+      $ref: ./get-operational-report.yaml#/get
+components:
+  parameters:
+    RideId:
+      name: rideId
+      in: path
+      required: true
+      description: Mã chuyến xe
+      schema:
+        type: string
+        example: RIDE001
+  schemas:
+    Coordinate:
+      type: object
+      required:
+      - latitude
+      - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+          example: 10.7769
+        longitude:
+          type: number
+          format: double
+          example: 106.7009
+    Location:
+      type: object
+      required:
+      - address
+      - coordinate
+      properties:
+        address:
+          type: string
+          example: Đại học Công nghiệp TP.HCM
+        coordinate:
+          $ref: '#/components/schemas/Coordinate'
+    VehicleType:
+      type: string
+      enum:
+      - MOTORBIKE
+      - CAR_4_SEATS
+      - CAR_7_SEATS
+      example: CAR_4_SEATS
+    RideStatus:
+      type: string
+      enum:
+      - REQUESTED
+      - DRIVER_ASSIGNED
+      - DRIVER_ARRIVED
+      - PICKED_UP
+      - IN_PROGRESS
+      - COMPLETED
+      - CANCELLED
+      example: DRIVER_ASSIGNED
+    CreateRideRequest:
+      type: object
+      required:
+      - customerId
+      - pickup
+      - destination
+      - vehicleType
+      properties:
+        customerId:
+          type: string
+          example: CUS001
+        pickup:
+          $ref: '#/components/schemas/Location'
+        destination:
+          $ref: '#/components/schemas/Location'
+        vehicleType:
+          $ref: '#/components/schemas/VehicleType'
+        prioritizeHighRating:
+          type: boolean
+          description: Có ưu tiên tài xế có rating cao hay không
+          default: false
+        note:
+          type: string
+          example: Gọi khách khi đến nơi
+    Ride:
+      type: object
+      properties:
+        id:
+          type: string
+          example: RIDE001
+        customerId:
+          type: string
+          example: CUS001
+        driver:
+          $ref: '#/components/schemas/Driver'
+        pickup:
+          $ref: '#/components/schemas/Location'
+        destination:
+          $ref: '#/components/schemas/Location'
+        vehicleType:
+          $ref: '#/components/schemas/VehicleType'
+        status:
+          $ref: '#/components/schemas/RideStatus'
+        etaMinutes:
+          type: integer
+          example: 5
+        fare:
+          $ref: '#/components/schemas/Fare'
+    DispatchRequest:
+      type: object
+      properties:
+        prioritizeNearest:
+          type: boolean
+          default: true
+        prioritizeHighRating:
+          type: boolean
+          default: false
+        radiusKm:
+          type: number
+          format: double
+          default: 5
+          example: 5
+    DriverOffer:
+      type: object
+      properties:
+        offerId:
+          type: string
+          example: OFF001
+        rideId:
+          type: string
+          example: RIDE001
+        driverId:
+          type: string
+          example: DRI001
+        status:
+          type: string
+          enum:
+          - PENDING
+          - ACCEPTED
+          - REJECTED
+          - EXPIRED
+          example: PENDING
+        expiresAt:
+          type: string
+          format: date-time
+    DriverResponseRequest:
+      type: object
+      required:
+      - driverId
+      - response
+      properties:
+        driverId:
+          type: string
+          example: DRI001
+        response:
+          type: string
+          enum:
+          - ACCEPT
+          - REJECT
+          example: ACCEPT
+        reason:
+          type: string
+          example: Busy
+    Driver:
+      type: object
+      properties:
+        id:
+          type: string
+          example: DRI001
+        name:
+          type: string
+          example: Nguyen Van B
+        phone:
+          type: string
+          example: 0901234567
+        rating:
+          type: number
+          format: float
+          example: 4.8
+        online:
+          type: boolean
+          example: true
+        available:
+          type: boolean
+          example: true
+        location:
+          $ref: '#/components/schemas/Coordinate'
+        vehicle:
+          $ref: '#/components/schemas/Vehicle'
+    DriverRequest:
+      type: object
+      required:
+      - name
+      - phone
+      properties:
+        name:
+          type: string
+          example: Nguyen Van B
+        phone:
+          type: string
+          example: 0901234567
+    RideTracking:
+      type: object
+      properties:
+        rideId:
+          type: string
+          example: RIDE001
+        driverLocation:
+          $ref: '#/components/schemas/Coordinate'
+        etaMinutes:
+          type: integer
+          example: 4
+        status:
+          $ref: '#/components/schemas/RideStatus'
+        lastUpdated:
+          type: string
+          format: date-time
+    UpdateRideStatusRequest:
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          enum:
+          - DRIVER_ARRIVED
+          - PICKED_UP
+          - IN_PROGRESS
+          - COMPLETED
+          example: IN_PROGRESS
+    Fare:
+      type: object
+      properties:
+        rideId:
+          type: string
+          example: RIDE001
+        baseFare:
+          type: number
+          format: double
+          example: 20000
+        distanceFare:
+          type: number
+          format: double
+          example: 15000
+        total:
+          type: number
+          format: double
+          example: 35000
+        currency:
+          type: string
+          example: VND
+    PaymentRequest:
+      type: object
+      required:
+      - method
+      properties:
+        method:
+          type: string
+          enum:
+          - CASH
+          - E_WALLET
+          - BANK_TRANSFER
+          example: E_WALLET
+        amount:
+          type: number
+          format: double
+          example: 35000
+    Payment:
+      type: object
+      properties:
+        paymentId:
+          type: string
+          example: PAY001
+        rideId:
+          type: string
+          example: RIDE001
+        method:
+          type: string
+          enum:
+          - CASH
+          - E_WALLET
+          - BANK_TRANSFER
+          example: E_WALLET
+        status:
+          type: string
+          enum:
+          - PENDING
+          - SUCCESS
+          - FAILED
+          example: SUCCESS
+        amount:
+          type: number
+          format: double
+          example: 35000
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          example: NOTI001
+        type:
+          type: string
+          enum:
+          - RIDE_BOOKED
+          - DRIVER_ASSIGNED
+          - RIDE_STATUS
+          - PAYMENT
+          example: DRIVER_ASSIGNED
+        title:
+          type: string
+          example: Tài xế đã nhận chuyến
+        message:
+          type: string
+          example: Tài xế Nguyễn Văn B đang đến đón bạn.
+        read:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          example: CUS001
+        name:
+          type: string
+          example: Nguyen Van A
+        phone:
+          type: string
+          example: 0912345678
+        email:
+          type: string
+          example: nguyenvana@gmail.com
+    CustomerRequest:
+      type: object
+      required:
+      - name
+      - phone
+      properties:
+        name:
+          type: string
+          example: Nguyen Van A
+        phone:
+          type: string
+          example: 0912345678
+        email:
+          type: string
+          example: nguyenvana@gmail.com
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: string
+          example: VEH001
+        plateNumber:
+          type: string
+          example: 51A-12345
+        type:
+          $ref: '#/components/schemas/VehicleType'
+        active:
+          type: boolean
+          example: true
+    VehicleRequest:
+      type: object
+      required:
+      - plateNumber
+      - type
+      properties:
+        plateNumber:
+          type: string
+          example: 51A-12345
+        type:
+          $ref: '#/components/schemas/VehicleType'
+    ErrorReportRequest:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: string
+          example: DRIVER_NOT_RESPONDING
+        message:
+          type: string
+          example: Tài xế không phản hồi yêu cầu chuyến
+        rideId:
+          type: string
+          example: RIDE001
+        severity:
+          type: string
+          enum:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+          example: MEDIUM
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          example: TXN001
+        rideId:
+          type: string
+          example: RIDE001
+        type:
+          type: string
+          example: PAYMENT
+        amount:
+          type: number
+          format: double
+          example: 35000
+        status:
+          type: string
+          example: SUCCESS
+        createdAt:
+          type: string
+          format: date-time
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ROLE_ADMIN
+        name:
+          type: string
+          example: Administrator
+        permissions:
+          type: array
+          items:
+            type: string
+          example:
+          - RIDE_VIEW
+          - TRANSACTION_VIEW
+          - USER_MANAGE
+    RatingRequest:
+      type: object
+      required:
+      - customerId
+      - score
+      properties:
+        customerId:
+          type: string
+          example: CUS001
+        score:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        comment:
+          type: string
+          example: Tài xế lịch sự và đúng giờ.
+    Rating:
+      type: object
+      properties:
+        id:
+          type: string
+          example: RAT001
+        rideId:
+          type: string
+          example: RIDE001
+        driverId:
+          type: string
+          example: DRI001
+        score:
+          type: integer
+          example: 5
+        comment:
+          type: string
+          example: Tài xế lịch sự và đúng giờ.
+    RideSummary:
+      type: object
+      properties:
+        rideId:
+          type: string
+          example: RIDE001
+        pickup:
+          type: string
+          example: Đại học Công nghiệp TP.HCM
+        destination:
+          type: string
+          example: Sân bay Tân Sơn Nhất
+        driverName:
+          type: string
+          example: Nguyen Van B
+        fare:
+          type: number
+          format: double
+          example: 35000
+        status:
+          $ref: '#/components/schemas/RideStatus'
+        completedAt:
+          type: string
+          format: date-time
+    OperationalReport:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date
+        to:
+          type: string
+          format: date
+        totalRides:
+          type: integer
+          example: 1250
+        completedRides:
+          type: integer
+          example: 1180
+        cancelledRides:
+          type: integer
+          example: 70
+        totalRevenue:
+          type: number
+          format: double
+          example: 42000000

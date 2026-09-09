@@ -1,0 +1,20 @@
+get:
+  tags:
+  - Operations
+  summary: Theo dõi tất cả chuyến
+  operationId: listOperationalRides
+  x-fr:
+  - FR33
+  x-br:
+  - BR13
+  - BR14
+  - BR15
+  responses:
+    '200':
+      description: Danh sách chuyến đang vận hành
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Ride'

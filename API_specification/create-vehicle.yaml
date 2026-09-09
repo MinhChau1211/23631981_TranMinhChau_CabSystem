@@ -1,0 +1,23 @@
+post:
+  tags:
+  - Vehicles
+  summary: Quản lý phương tiện - tạo mới
+  operationId: createVehicle
+  x-fr:
+  - FR32
+  x-br:
+  - BR11
+  - BR12
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/VehicleRequest'
+  responses:
+    '201':
+      description: Tạo phương tiện thành công
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vehicle'

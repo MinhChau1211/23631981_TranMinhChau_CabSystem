@@ -1,0 +1,22 @@
+post:
+  tags:
+  - Drivers
+  summary: Tìm tài xế khác
+  description: Xử lý trường hợp tài xế không phản hồi hoặc từ chối và gửi yêu cầu cho tài xế khác.
+  operationId: redispatchRide
+  x-fr:
+  - FR12
+  - FR13
+  x-br:
+  - BR03
+  responses:
+    '200':
+      description: Đã tìm và gửi lại cho tài xế khác
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DriverOffer'
+    '404':
+      description: Không còn tài xế phù hợp
+  parameters:
+  - $ref: '#/components/parameters/RideId'

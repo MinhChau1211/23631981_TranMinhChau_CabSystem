@@ -1,0 +1,19 @@
+get:
+  tags:
+  - Users
+  summary: Quản lý tài xế - danh sách
+  operationId: listDrivers
+  x-fr:
+  - FR31
+  x-br:
+  - BR11
+  - BR12
+  responses:
+    '200':
+      description: Danh sách tài xế
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Driver'

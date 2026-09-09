@@ -1,0 +1,30 @@
+post:
+  tags:
+  - Rides
+  summary: Đặt chuyến xe
+  description: Tạo yêu cầu đặt chuyến với điểm đón, điểm đến, loại xe và yêu cầu ưu tiên tài xế rating cao.
+  operationId: createRide
+  x-fr:
+  - FR01
+  - FR02
+  - FR03
+  - FR04
+  x-br:
+  - BR01
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CreateRideRequest'
+  responses:
+    '201':
+      description: Tạo chuyến thành công
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Ride'
+    '400':
+      description: Dữ liệu đặt chuyến không hợp lệ
+    '409':
+      description: Không có dịch vụ phù hợp

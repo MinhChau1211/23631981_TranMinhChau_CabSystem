@@ -1,0 +1,19 @@
+get:
+  tags:
+  - Users
+  summary: Quản lý khách hàng - danh sách
+  operationId: listCustomers
+  x-fr:
+  - FR30
+  x-br:
+  - BR11
+  - BR12
+  responses:
+    '200':
+      description: Danh sách khách hàng
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Customer'

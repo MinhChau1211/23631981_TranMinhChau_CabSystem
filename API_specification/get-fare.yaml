@@ -1,0 +1,22 @@
+get:
+  tags:
+  - Fare
+  summary: Tính và xem cước chuyến xe
+  description: Xác định cước và hiển thị số tiền.
+  operationId: getFare
+  x-fr:
+  - FR21
+  - FR22
+  x-br:
+  - BR07
+  parameters:
+  - $ref: '#/components/parameters/RideId'
+  responses:
+    '200':
+      description: Thông tin cước
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Fare'
+    '404':
+      description: Không tìm thấy chuyến
