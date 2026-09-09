@@ -102,7 +102,25 @@ Có 4 vùng:
 
 4. Mermaid Stakeholder Matrix
 
-![Stakeholder Matrix](./stakeholder-matrix.png)
+```mermaid
+quadrantChart
+    title Stakeholder Matrix - CAB System
+    x-axis "Interest thấp" --> "Interest cao"
+    y-axis "Power thấp" --> "Power cao"
+
+    quadrant-1 "Manage Closely"
+    quadrant-2 "Keep Satisfied"
+    quadrant-3 "Monitor"
+    quadrant-4 "Keep Informed"
+
+    "Ban lãnh đạo": [0.88, 0.92]
+    "Nhân viên vận hành": [0.85, 0.78]
+    "Nhà cung cấp thanh toán": [0.78, 0.62]
+    "BA": [0.90, 0.55]
+    "Đội phát triển": [0.88, 0.50]
+    "Khách hàng": [0.92, 0.30]
+    "Tài xế": [0.88, 0.28]
+```
 
 ## **B3: Xác định mục tiêu nghiệp vụ:**
 liệt kê ra vd:
@@ -511,10 +529,210 @@ Trip 1 ─────── N Notification
 
 3. Mermaid ERD
 
-![data modeling](./data-modeling.png)
+```mermaid
+erDiagram
+
+    CUSTOMER {
+        int customer_id PK
+        string full_name
+        string phone
+        string email
+        string password
+        string status
+    }
+
+    DRIVER {
+        int driver_id PK
+        string full_name
+        string phone
+        string email
+        string password
+        string status
+        decimal rating
+    }
+
+    VEHICLE {
+        int vehicle_id PK
+        int driver_id FK
+        string vehicle_type
+        string license_plate
+        string status
+    }
+
+    TRIP {
+        int trip_id PK
+        int customer_id FK
+        int driver_id FK
+        int vehicle_id FK
+        string pickup_location
+        string destination
+        string vehicle_type
+        string trip_status
+        datetime created_at
+        datetime completed_at
+        decimal fare
+    }
+
+    DRIVER_LOCATION {
+        int location_id PK
+        int driver_id FK
+        decimal latitude
+        decimal longitude
+        datetime recorded_at
+    }
+
+    PAYMENT {
+        int payment_id PK
+        int trip_id FK
+        decimal amount
+        string payment_method
+        string payment_status
+        datetime payment_time
+    }
+
+    TRANSACTION {
+        int transaction_id PK
+        int payment_id FK
+        string provider
+        string transaction_code
+        decimal amount
+        string transaction_status
+        datetime transaction_time
+    }
+
+    NOTIFICATION {
+        int notification_id PK
+        int customer_id FK
+        int driver_id FK
+        int trip_id FK
+        string notification_type
+        string content
+        string status
+        datetime created_at
+    }
+
+    RATING {
+        int rating_id PK
+        int trip_id FK
+        int customer_id FK
+        int driver_id FK
+        int score
+        string comment
+        datetime created_at
+    }
+
+
+    CUSTOMER ||--o{ TRIP : "places"
+    DRIVER ||--o{ TRIP : "performs"
+    DRIVER ||--o{ VEHICLE : "owns"
+    DRIVER ||--o{ DRIVER_LOCATION : "has"
+
+    VEHICLE ||--o{ TRIP : "used_for"
+
+    TRIP ||--|| PAYMENT : "has"
+    PAYMENT ||--o{ TRANSACTION : "contains"
+
+    TRIP ||--o{ NOTIFICATION : "generates"
+
+    CUSTOMER ||--o{ NOTIFICATION : "receives"
+    DRIVER ||--o{ NOTIFICATION : "receives"
+
+    TRIP ||--o| RATING : "has"
+    CUSTOMER ||--o{ RATING : "gives"
+    DRIVER ||--o{ RATING : "receives"
+```
+
 
 ## **B10: xác định những cái chức năng không phải là yêu cầu**
 Vd hệ thống thiết kệ ở giai đoạn mbd thì không cần thiết lắm 
-Tự thiết kế một vài chức năng không phải là yêu cầu
+
+-Tự thiết kế một vài chức năng không phải là yêu cầu
+
+**Các chức năng không nằm trong yêu cầu hiện tại**
+
+| STT | Chức năng | Lý do không phải yêu cầu |
+|---|---|---|
+| 1 | Đăng nhập bằng Google/Facebook | Khách hàng chỉ yêu cầu đăng ký và đăng nhập, chưa yêu cầu đăng nhập mạng xã hội. |
+| 2 | Chat trực tiếp giữa khách hàng và tài xế | Tài liệu không yêu cầu chức năng chat. |
+| 3 | Mã khuyến mãi / Voucher | Chưa có yêu cầu về chương trình khuyến mãi. |
+| 4 | Tích điểm thành viên | Chưa có yêu cầu về loyalty/member point. |
+| 5 | Ví điện tử riêng của CAB | Khách hàng chỉ yêu cầu tiền mặt hoặc thanh toán điện tử qua nhà cung cấp bên ngoài. |
+| 6 | Đăng ký nhiều điểm dừng trong một chuyến | Yêu cầu hiện tại chỉ đề cập điểm đón và điểm đến. |
+| 7 | Đặt xe trước theo lịch | Chưa có yêu cầu về scheduled booking. |
+| 8 | Chức năng gọi điện trong ứng dụng | Chưa được khách hàng yêu cầu. |
+| 9 | Chế độ Dark Mode / tùy chỉnh giao diện | Đây là yêu cầu UI tùy chọn, không phải nghiệp vụ cốt lõi. |
+| 10 | AI dự đoán nhu cầu đặt xe | Không nằm trong yêu cầu hiện tại. |
+| 11 | Chức năng | Khách hàng cần thông tin vị trí nhưng không yêu cầu tự xây dựng nền tảng bản đồ. |
+| 12 | Chức năng | Khách hàng muốn tích hợp nhà cung cấp thanh toán bên ngoài. |
+
+## **B11: xác định và vẽ các usecase**
+
+Thiết kế usecase customer uc01
+
+```mermaid
+flowchart LR
+
+    Customer["👤 KHÁCH HÀNG"]
+    Driver["🚗 TÀI XẾ"]
+
+    subgraph CAB["CAB SYSTEM"]
+
+        UC01(("UC01<br/>Đặt chuyến xe"))
+
+        FR01(("Nhập điểm đón"))
+        FR02(("Nhập điểm đến"))
+        FR03(("Chọn loại xe"))
+        FR04(("Gửi yêu cầu đặt xe"))
+
+        FIND(("Tìm tài xế phù hợp"))
+        LOCATION(("Xác định vị trí"))
+        ONLINE(("Kiểm tra tài xế<br/>sẵn sàng"))
+        PRIORITY(("Ưu tiên tài xế<br/>phù hợp & gần khách"))
+
+        REQUEST(("Gửi đề xuất chuyến"))
+        RESPONSE(("Xử lý phản hồi<br/>tài xế"))
+
+        ACCEPT(("Tài xế chấp nhận"))
+        REJECT(("Tài xế từ chối"))
+        TIMEOUT(("Tài xế không<br/>phản hồi"))
+
+        NEXT(("Tìm tài xế khác"))
+        NOTFOUND(("Thông báo không<br/>tìm được tài xế"))
+        CONFIRM(("Xác nhận tài xế<br/>cho khách hàng"))
+
+    end
+
+    Customer --- UC01
+    Driver --- ACCEPT
+    Driver --- REJECT
+    Driver --- TIMEOUT
+
+    UC01 -.->|"include"| FR01
+    UC01 -.->|"include"| FR02
+    UC01 -.->|"include"| FR03
+    UC01 -.->|"include"| FR04
+    UC01 -.->|"include"| FIND
+
+    FIND -.->|"include"| LOCATION
+    FIND -.->|"include"| ONLINE
+    FIND -.->|"include"| PRIORITY
+    FIND -.->|"include"| REQUEST
+
+    REQUEST -.->|"include"| RESPONSE
+
+    RESPONSE -.->|"chấp nhận"| ACCEPT
+    RESPONSE -.->|"từ chối"| REJECT
+    RESPONSE -.->|"timeout"| TIMEOUT
+
+    REJECT -.->|"tìm lại"| NEXT
+    TIMEOUT -.->|"tìm lại"| NEXT
+
+    NEXT -.->|"còn tài xế"| FIND
+    NEXT -.->|"không còn"| NOTFOUND
+
+    ACCEPT -.->|"xác nhận"| CONFIRM
+```
+
+
 
 
