@@ -1,0 +1,23 @@
+post:
+  tags:
+  - Users
+  summary: Quản lý tài xế - tạo mới
+  operationId: createDriver
+  x-fr:
+  - FR31
+  x-br:
+  - BR11
+  - BR12
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/DriverRequest'
+  responses:
+    '201':
+      description: Tạo tài xế thành công
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Driver'
