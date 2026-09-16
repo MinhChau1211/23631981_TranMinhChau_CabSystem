@@ -1,4 +1,4 @@
-## **B1: Đọc và phân tích yêu cầu sơ khởi của khách hàng ở giai đoạn 1**
+# **B1: Đọc và phân tích yêu cầu sơ khởi của khách hàng ở giai đoạn 1**
 -Hiểu được business contect : ngữ cảnh nghiệp vụ -> Xác định vấn đề nghiệp vụ
 1. Hiểu Business Context – Ngữ cảnh nghiệp vụ
 
@@ -43,7 +43,7 @@ Khách hàng đánh giá tài xế
 | 7 | Quản lý vận hành còn khó khăn | Nhân viên cần quản lý khách hàng, tài xế, phương tiện, chuyến đi | Khó kiểm soát hoạt động |
 | 8 | Khó theo dõi hiệu quả kinh doanh | Ban lãnh đạo cần báo cáo về chuyến, doanh thu, hủy chuyến... | Khó đánh giá hoạt động |
 
-## **B2:**
+# **B2:**
 -Phải xác định những stakeholder
 
 -lập bảng gồm 2 bảng: tên và vai trò
@@ -122,7 +122,7 @@ quadrantChart
     "Tài xế": [0.88, 0.28]
 ```
 
-## **B3: Xác định mục tiêu nghiệp vụ:**
+# **B3: Xác định mục tiêu nghiệp vụ:**
 liệt kê ra vd:
 
 -bg01 giảm thời gian tìm tài xế (là tự động tìm tài xế)
@@ -139,7 +139,7 @@ liệt kê ra vd:
 | BG06 | Cung cấp dữ liệu phục vụ quản lý | Cung cấp báo cáo về số chuyến, doanh thu, tỷ lệ hoàn thành, tỷ lệ hủy và hiệu quả hoạt động của tài xế. |
 | BG07 | Đảm bảo hệ thống có khả năng mở rộng | Cho phép hệ thống phục vụ số lượng lớn khách hàng, tài xế và bổ sung chức năng mới trong tương lai. |
 
-## **B4:Xác định phạm vi yêu cầu làm**
+# **B4:Xác định phạm vi yêu cầu làm**
 -vd: có quản lí khách hàng, tài xế:
 
 Liệt kê ra các yêu cầu phải làm, các module
@@ -241,7 +241,7 @@ Module 10 – Đánh giá
 
 **Lưu ý:** Những vấn đề từ mục 5–9 không hẳn là "không bao giờ làm", mà chính xác hơn là **chưa thể chốt ở phạm vi hiện tại vì khách hàng yêu cầu BA phải làm rõ trước khi phát triển.**
 
-## **B5: xong b4 gặp khách hàng xác nhận lại -> bước qua b5**
+# **B5: xong b4 gặp khách hàng xác nhận lại -> bước qua b5**
 -Chuyển yêu cầu thành business requirement (br)
 
 -Bảng 3 cột (stt,br, tên br, diễn giải)
@@ -274,7 +274,7 @@ Br03?
 | 17 | BR17 | Báo cáo hoạt động | Hệ thống cung cấp báo cáo về số lượng chuyến, doanh thu, tỷ lệ hoàn thành, tỷ lệ hủy và hiệu quả hoạt động của tài xế. |
 | 18 | BR18 | Quản lý lịch sử chuyến đi | Hệ thống cho phép khách hàng xem lại lịch sử các chuyến đi và số tiền phải trả. |
 
-## **B6: xây dựng các business process:**
+# **B6: xây dựng các business process:**
 -Vd: khách hàng muốn đặt chuyến :tạo chuyến đi – xác nhận điểm đón/điểm đến –hệ thống xác nhận –tìm tài xế ->tài xế chấp nhận hay ko thì phải báo cho khách hàng
 
 -Tạo các business process
@@ -384,7 +384,7 @@ Chuyến đi hoàn thành
 
 Khách hàng được yêu cầu có thể xem lịch sử chuyến đi, số tiền phải trả và đánh giá tài xế sau khi hoàn thành chuyến.
 
-## **B7: Phân rã yêu cầu nghiệp vụ (fr)**
+# **B7: Phân rã yêu cầu nghiệp vụ (fr)**
 Từ br -> phân rã ? fr
 
 Fr01: xác định vị trí khách hàng
@@ -409,7 +409,7 @@ Fr04: nếu có yêu cầu ưu tiên cho tài xế rating cao: fr -> ưu tiên c
 | BR13/14/15 | Quản lý vận hành | FR33 Theo dõi chuyến; FR34 Xử lý lỗi; FR35 Tra cứu giao dịch; FR36 Phân quyền |
 | BR16/17/18 | Đánh giá & báo cáo | FR37 Đánh giá tài xế; FR38 Lịch sử chuyến; FR39 Báo cáo hoạt động |
 
-## **B8: business rule and acception (những cái luật để khi xuất hiện những trường hợp ngoại lệ là xử lí như thế nào?)**
+# **B8: business rule and acception (những cái luật để khi xuất hiện những trường hợp ngoại lệ là xử lí như thế nào?)**
 Ví dụ: 
 -Chỉ những tài xế nào trong trạng thái sẵn sàng thì mới được nhận chuyến…
 
@@ -448,7 +448,7 @@ Ví dụ:
 | EX06 | Thanh toán thất bại | Nhà cung cấp thanh toán trả kết quả thất bại | Thông báo và cho phép xử lý lại theo chính sách |
 | EX07 | Mất kết nối | Khách/tài xế mất mạng | **Cần xác nhận cách xử lý** |
 
-## **B9: data modeling:** 
+# **B9: data modeling:** 
 -xây dựng model nhìn vào xác định những cái thực thể -> vẽ sơ đồ erd (vẽ bằng mermaid nhờ AI sinh ra code )
 
 1. Xác định các thực thể
@@ -643,7 +643,7 @@ erDiagram
 ```
 
 
-## **B10: xác định những cái chức năng không phải là yêu cầu**
+# **B10: xác định những cái chức năng không phải là yêu cầu**
 Vd hệ thống thiết kệ ở giai đoạn mbd thì không cần thiết lắm 
 
 -Tự thiết kế một vài chức năng không phải là yêu cầu
@@ -668,6 +668,17 @@ Vd hệ thống thiết kệ ở giai đoạn mbd thì không cần thiết lắ
 ## **B11: xác định và vẽ các usecase**
 
 Thiết kế usecase customer uc01
+
+1. Xác định Actor
+
+Có 5 Actor:
+- Khách hàng
+- Tài xế
+- Nhân viên vận hành
+- Quản lý
+- Cổng thanh toán điện tử
+
+2. Vẽ Use Case
 
 ```mermaid
 flowchart LR
@@ -732,6 +743,233 @@ flowchart LR
 
     ACCEPT -.->|"xác nhận"| CONFIRM
 ```
+# **B12: Đặc tả usecase**
+
+**USE CASE 1 — ĐẶT CHUYẾN XE**
+
+## Đặt chuyến xe
+
+### Tiền điều kiện
+- Khách hàng đã đăng nhập vào hệ thống.
+- Hệ thống CAB đang hoạt động.
+- Khách hàng có thông tin điểm đón và điểm đến hợp lệ.
+- Hệ thống có khả năng tìm kiếm tài xế phù hợp.
+
+### Hậu điều kiện
+- Yêu cầu đặt chuyến của khách hàng được tạo và lưu vào hệ thống.
+- Nếu tìm được tài xế phù hợp và tài xế chấp nhận, chuyến xe được phân công cho tài xế.
+- Thông tin tài xế và trạng thái chuyến xe được cập nhật để khách hàng theo dõi.
+- Nếu chưa tìm được tài xế, hệ thống thông báo cho khách hàng theo quy tắc nghiệp vụ.
+
+### Actor chính
+Khách hàng
+
+### Actor phụ
+Tài xế
+
+### Basic flow
+
+| Khách hàng / Tài xế | Hệ thống |
+|---|---|
+| 1. Khách hàng chọn chức năng “Đặt chuyến xe”. | |
+| | 2. Hệ thống hiển thị màn hình đặt chuyến xe. |
+| 3. Khách hàng nhập điểm đón. | |
+| | 4. Hệ thống ghi nhận thông tin điểm đón. |
+| 5. Khách hàng nhập điểm đến. | |
+| | 6. Hệ thống ghi nhận thông tin điểm đến. |
+| 7. Khách hàng chọn loại xe. | |
+| | 8. Hệ thống hiển thị thông tin chuyến xe và yêu cầu khách hàng xác nhận đặt xe. |
+| 9. Khách hàng chọn “Đặt xe”. | |
+| | 10. Hệ thống kiểm tra tính hợp lệ của thông tin đặt chuyến. |
+| | 11. Hệ thống tạo và lưu yêu cầu đặt chuyến. |
+| | 12. Hệ thống xác định vị trí điểm đón và tìm các tài xế đang ở trạng thái sẵn sàng. |
+| | 13. Hệ thống xác định các tài xế phù hợp với yêu cầu chuyến xe và ưu tiên tài xế phù hợp, ở gần điểm đón. |
+| | 14. Hệ thống gửi yêu cầu chuyến xe đến tài xế phù hợp. |
+| 15. Tài xế nhận được yêu cầu chuyến xe và chọn “Chấp nhận”. | |
+| | 16. Hệ thống ghi nhận tài xế chấp nhận chuyến và phân công tài xế cho chuyến xe. |
+| | 17. Hệ thống cập nhật thông tin tài xế và trạng thái chuyến xe. |
+| | 18. Hệ thống thông báo cho khách hàng thông tin tài xế và trạng thái chuyến xe. |
+| 19. Khách hàng xem thông tin tài xế và trạng thái chuyến xe. | |
+| | 20. Hệ thống chuyển sang quá trình theo dõi và thực hiện chuyến xe. |
+| | 21. Hệ thống kết thúc thao tác đặt chuyến. |
+
+### Alternative flow
+
+#### 8.1 Khách hàng hủy thao tác đặt chuyến
+1. Khách hàng chọn “Hủy”.
+2. Hệ thống không tạo yêu cầu đặt chuyến.
+3. Hệ thống quay lại màn hình trước đó.
+4. Kết thúc thao tác.
+
+#### 15.1 Tài xế từ chối yêu cầu chuyến xe
+1. Tài xế chọn “Từ chối”.
+2. Hệ thống ghi nhận tài xế từ chối yêu cầu chuyến.
+3. Hệ thống loại tài xế này khỏi lần tìm kiếm hiện tại.
+4. Hệ thống tiếp tục tìm tài xế phù hợp khác.
+5. Nếu tìm được tài xế khác, hệ thống gửi yêu cầu chuyến xe đến tài xế đó.
+6. Quay lại bước 15 Basic flow.
+
+#### 15.2 Tài xế không phản hồi yêu cầu chuyến xe
+1. Hệ thống chờ phản hồi của tài xế trong khoảng thời gian theo quy định nghiệp vụ.
+2. Hết thời gian chờ, hệ thống xác định tài xế không phản hồi.
+3. Hệ thống ghi nhận yêu cầu không được chấp nhận.
+4. Hệ thống loại tài xế khỏi lần tìm kiếm hiện tại.
+5. Hệ thống tiếp tục tìm tài xế phù hợp khác.
+6. Nếu tìm được tài xế khác, hệ thống gửi yêu cầu chuyến xe đến tài xế đó.
+7. Quay lại bước 15 Basic flow.
+
+### Exception
+
+#### 10.1 Thông tin đặt chuyến không hợp lệ
+1. Hệ thống phát hiện thông tin điểm đón, điểm đến hoặc loại xe còn thiếu hoặc không hợp lệ.
+2. Hệ thống thông báo thông tin cần bổ sung hoặc chỉnh sửa.
+3. Khách hàng bổ sung hoặc chỉnh sửa thông tin.
+4. Quay lại bước 3 Basic flow.
+
+#### 12.1 Không có tài xế đang sẵn sàng
+1. Hệ thống không tìm thấy tài xế nào đang ở trạng thái sẵn sàng.
+2. Hệ thống thông báo “Hiện không có tài xế sẵn sàng”.
+3. Khách hàng có thể thực hiện lại yêu cầu đặt chuyến.
+4. Kết thúc thao tác.
+
+#### 13.1 Không tìm được tài xế phù hợp
+1. Hệ thống không tìm thấy tài xế phù hợp với yêu cầu chuyến xe.
+2. Hệ thống thông báo “Không tìm được tài xế phù hợp”.
+3. Khách hàng có thể thực hiện lại yêu cầu đặt chuyến.
+4. Kết thúc thao tác.
+
+#### 15.3 Thời gian tìm tài xế vượt quá thời gian quy định
+1. Hệ thống phát hiện quá trình tìm kiếm tài xế vượt quá thời gian theo quy định nghiệp vụ.
+2. Hệ thống thông báo cho khách hàng về tình trạng tìm tài xế.
+3. Hệ thống xử lý yêu cầu theo chính sách thời gian chờ/cancel đã được doanh nghiệp quy định.
+4. Kết thúc thao tác.
+
+#### 16.1 Tài xế đã chấp nhận nhưng không thực hiện chuyến
+1. Hệ thống phát hiện tài xế đã chấp nhận nhưng không tiếp tục thực hiện chuyến theo quy định.
+2. Hệ thống ghi nhận tình trạng của chuyến xe.
+3. Hệ thống xử lý theo chính sách xử lý tài xế không thực hiện chuyến.
+4. Hệ thống thông báo cho khách hàng.
+5. Kết thúc thao tác.
+
+# **B13. TIÊU CHÍ CHẤP NHẬN — ACCEPTANCE CRITERIA**
+
+### Acceptance Criteria cho UC01 — Đặt chuyến xe
+
+| Mã AC | Tiêu chí chấp nhận |
+|---|---|
+| AC01 | Khách hàng có thể nhập điểm đón hợp lệ cho chuyến xe. |
+| AC02 | Khách hàng có thể nhập điểm đến hợp lệ cho chuyến xe. |
+| AC03 | Khách hàng có thể lựa chọn loại xe trước khi gửi yêu cầu đặt chuyến. |
+| AC04 | Hệ thống phải kiểm tra và thông báo khi thông tin đặt chuyến bị thiếu hoặc không hợp lệ. |
+| AC05 | Khi thông tin đặt chuyến hợp lệ, hệ thống phải tạo và lưu yêu cầu đặt chuyến. |
+| AC06 | Hệ thống phải tìm kiếm tài xế đang sẵn sàng và phù hợp với yêu cầu chuyến xe. |
+| AC07 | Hệ thống phải gửi yêu cầu chuyến xe đến tài xế phù hợp và ghi nhận phản hồi của tài xế. |
+| AC08 | Khi tài xế từ chối hoặc không phản hồi, hệ thống phải tiếp tục tìm tài xế phù hợp khác khi có thể. |
+| AC09 | Khi không tìm được tài xế phù hợp, hệ thống phải thông báo rõ ràng cho khách hàng. |
+| AC10 | Khi tài xế chấp nhận chuyến xe, hệ thống phải phân công tài xế và cập nhật thông tin chuyến xe. |
+| AC11 | Hệ thống phải thông báo thông tin tài xế và trạng thái chuyến xe cho khách hàng sau khi chuyến được phân công. |
+
+# **B14. Truy xuất nguồn gốc yêu cầu**
+
+### Ma trận truy xuất yêu cầu (RTM)
+
+| BG | PR (Business Requirement) | FR (Functional Requirement) | UC (Use Case) | AC (Acceptance Criteria) |
+|---|---|---|---|---|
+| BG01 | BR01 | FR01 | UC01 | AC01 |
+| BG01 | BR01 | FR02 | UC01 | AC02 |
+| BG01 | BR01 | FR03 | UC01 | AC03 |
+| BG01 | BR01 | FR04 | UC01 | AC05 |
+| BG01 | BR02 | FR05 | UC01 | AC06 |
+| BG01 | BR02 | FR06 | UC01 | AC06 |
+| BG01 | BR02 | FR07 | UC01 | AC06 |
+| BG01 | BR02 | FR08 | UC01 | AC06 |
+| BG01 | BR02 | FR09 | UC01 | AC07 |
+| BG01 | BR03 | FR10 | UC01 | AC10 |
+| BG01 | BR03 | FR11 | UC01 | AC08 |
+| BG01 | BR03 | FR12 | UC01 | AC08 |
+| BG01 | BR03 | FR13 | UC01 | AC08 |
+
+## Ý nghĩa mã trong bảng
+
+### Business Goal
+
+| Mã | Business Goal |
+|---|---|
+| BG01 | Giảm thời gian tìm kiếm và phân công tài xế thông qua tự động hóa. |
+| BG02 | Cung cấp phương thức thanh toán thuận tiện bằng tiền mặt hoặc điện tử. |
+| BG03 | Cải thiện khả năng theo dõi chuyến đi. |
+| BG04 | Nâng cao hiệu quả quản lý và vận hành. |
+| BG05 | Nâng cao chất lượng dịch vụ thông qua đánh giá tài xế. |
+| BG06 | Cung cấp dữ liệu và báo cáo phục vụ quản lý. |
+| BG07 | Đảm bảo hệ thống có khả năng mở rộng khi số lượng khách hàng và tài xế tăng. |
+
+### Business Requirement
+
+| Mã | Business Requirement |
+|---|---|
+| BR01 | Đặt chuyến xe. |
+| BR02 | Tìm và phân công tài xế. |
+| BR03 | Xử lý phản hồi của tài xế. |
+| BR04 | Theo dõi chuyến đi. |
+| BR05 | Quản lý thực hiện chuyến. |
+| BR06 | Quản lý vị trí tài xế. |
+| BR07 | Tính cước. |
+| BR08 | Thanh toán. |
+| BR09 | Xử lý thanh toán điện tử thông qua nhà cung cấp bên ngoài. |
+| BR10 | Quản lý thông báo. |
+| BR11 | Quản lý khách hàng. |
+| BR12 | Quản lý tài xế và phương tiện. |
+| BR13 | Quản lý chuyến đi. |
+| BR14 | Quản lý giao dịch. |
+| BR15 | Phân quyền quản trị. |
+| BR16 | Đánh giá tài xế. |
+| BR17 | Báo cáo hoạt động. |
+| BR18 | Quản lý lịch sử chuyến. |
+
+### Functional Requirement
+
+| Mã | Functional Requirement |
+|---|---|
+| FR01 | Nhập điểm đón. |
+| FR02 | Nhập điểm đến. |
+| FR03 | Chọn loại xe. |
+| FR04 | Gửi yêu cầu đặt chuyến. |
+| FR05 | Xác định vị trí. |
+| FR06 | Lọc tài xế đang sẵn sàng. |
+| FR07 | Xác định tài xế phù hợp. |
+| FR08 | Xử lý theo vị trí tài xế. |
+| FR09 | Gửi yêu cầu chuyến xe đến tài xế. |
+| FR10 | Tài xế chấp nhận chuyến xe. |
+| FR11 | Tài xế từ chối chuyến xe. |
+| FR12 | Xử lý trường hợp tài xế không phản hồi. |
+| FR13 | Tìm tài xế khác. |
+| FR14 | Xem thông tin tài xế. |
+| FR15 | Xem thời gian dự kiến đến. |
+| FR16 | Xem trạng thái chuyến xe. |
+| FR17 | Cập nhật trạng thái đã đến. |
+| FR18 | Cập nhật trạng thái đã đón khách. |
+| FR19 | Cập nhật trạng thái đang di chuyển. |
+| FR20 | Cập nhật trạng thái hoàn thành. |
+| FR21 | Tính cước chuyến xe. |
+| FR22 | Hiển thị số tiền cần thanh toán. |
+| FR23 | Thanh toán bằng tiền mặt. |
+| FR24 | Thanh toán điện tử. |
+| FR25 | Xử lý lỗi thanh toán. |
+| FR26 | Gửi thông báo đặt chuyến. |
+| FR27 | Gửi thông báo cho tài xế. |
+| FR28 | Gửi thông báo trạng thái chuyến. |
+| FR29 | Gửi thông báo thanh toán. |
+| FR30 | Quản lý khách hàng. |
+| FR31 | Quản lý tài xế. |
+| FR32 | Quản lý phương tiện. |
+| FR33 | Giám sát chuyến đi. |
+| FR34 | Xử lý sự cố. |
+| FR35 | Tra cứu giao dịch. |
+| FR36 | Phân quyền người dùng. |
+| FR37 | Đánh giá tài xế. |
+| FR38 | Xem lịch sử chuyến. |
+| FR39 | Xem báo cáo hoạt động. |
+
 
 
 
