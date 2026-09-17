@@ -1,0 +1,20 @@
+get:
+  tags:
+  - Operations
+  summary: Xem và phân quyền
+  operationId: listRoles
+  x-fr:
+  - FR36
+  x-br:
+  - BR13
+  - BR14
+  - BR15
+  responses:
+    '200':
+      description: Danh sách quyền
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Role'

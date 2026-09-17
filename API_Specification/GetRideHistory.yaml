@@ -1,0 +1,27 @@
+get:
+  tags:
+  - Reports
+  summary: Xem lịch sử chuyến
+  operationId: getRideHistory
+  x-fr:
+  - FR38
+  x-br:
+  - BR16
+  - BR17
+  - BR18
+  parameters:
+  - name: customerId
+    in: path
+    required: true
+    schema:
+      type: string
+      example: CUS001
+  responses:
+    '200':
+      description: Lịch sử chuyến
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/RideSummary'

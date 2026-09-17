@@ -1,0 +1,23 @@
+post:
+  tags:
+  - Users
+  summary: Quản lý khách hàng - tạo mới
+  operationId: createCustomer
+  x-fr:
+  - FR30
+  x-br:
+  - BR11
+  - BR12
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CustomerRequest'
+  responses:
+    '201':
+      description: Tạo khách hàng thành công
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Customer'

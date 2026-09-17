@@ -1,0 +1,23 @@
+get:
+  tags:
+  - Rides
+  summary: Xem thông tin chuyến
+  description: Xem tài xế, ETA và trạng thái chuyến.
+  operationId: getRide
+  x-fr:
+  - FR14
+  - FR15
+  - FR16
+  x-br:
+  - BR04
+  responses:
+    '200':
+      description: Thông tin chuyến
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Ride'
+    '404':
+      description: Không tìm thấy chuyến
+  parameters:
+  - $ref: '#/components/parameters/RideId'

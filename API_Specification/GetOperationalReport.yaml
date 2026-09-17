@@ -1,0 +1,31 @@
+get:
+  tags:
+  - Reports
+  summary: Báo cáo hoạt động
+  operationId: getOperationalReport
+  x-fr:
+  - FR39
+  x-br:
+  - BR16
+  - BR17
+  - BR18
+  parameters:
+  - name: from
+    in: query
+    required: true
+    schema:
+      type: string
+      format: date
+  - name: to
+    in: query
+    required: true
+    schema:
+      type: string
+      format: date
+  responses:
+    '200':
+      description: Báo cáo hoạt động
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationalReport'

@@ -1,0 +1,29 @@
+post:
+  tags:
+  - Ratings
+  summary: Đánh giá tài xế
+  description: Khách hàng đánh giá tài xế sau khi hoàn thành chuyến.
+  operationId: rateDriver
+  x-fr:
+  - FR37
+  x-br:
+  - BR16
+  - BR17
+  - BR18
+  parameters:
+  - $ref: '#/components/parameters/RideId'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/RatingRequest'
+  responses:
+    '201':
+      description: Đánh giá thành công
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Rating'
+    '400':
+      description: Đánh giá không hợp lệ

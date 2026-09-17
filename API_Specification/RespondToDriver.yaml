@@ -1,0 +1,30 @@
+post:
+  tags:
+  - Drivers
+  summary: Tài xế phản hồi yêu cầu chuyến
+  description: Tài xế chấp nhận hoặc từ chối yêu cầu chuyến.
+  operationId: respondToRide
+  x-fr:
+  - FR10
+  - FR11
+  x-br:
+  - BR03
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/DriverResponseRequest'
+  responses:
+    '200':
+      description: Đã ghi nhận phản hồi tài xế
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Ride'
+    '400':
+      description: Phản hồi không hợp lệ
+    '409':
+      description: Yêu cầu chuyến không còn hiệu lực
+  parameters:
+  - $ref: '#/components/parameters/RideId'

@@ -1,0 +1,21 @@
+get:
+  tags:
+  - Rides
+  summary: Theo dõi chuyến xe
+  description: Xem vị trí tài xế, ETA và trạng thái chuyến.
+  operationId: trackRide
+  x-fr:
+  - FR14
+  - FR15
+  - FR16
+  x-br:
+  - BR04
+  parameters:
+  - $ref: '#/components/parameters/RideId'
+  responses:
+    '200':
+      description: Dữ liệu theo dõi chuyến
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RideTracking'

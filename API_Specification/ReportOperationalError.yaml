@@ -1,0 +1,20 @@
+post:
+  tags:
+  - Operations
+  summary: Ghi nhận và xử lý lỗi vận hành
+  operationId: createOperationalError
+  x-fr:
+  - FR34
+  x-br:
+  - BR13
+  - BR14
+  - BR15
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ErrorReportRequest'
+  responses:
+    '201':
+      description: Đã ghi nhận lỗi

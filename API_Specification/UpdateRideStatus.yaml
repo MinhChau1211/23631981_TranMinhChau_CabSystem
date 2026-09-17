@@ -1,0 +1,32 @@
+patch:
+  tags:
+  - Rides
+  summary: Cập nhật trạng thái chuyến
+  description: Cập nhật các trạng thái đã đến, đã đón, đang di chuyển và hoàn thành.
+  operationId: updateRideStatus
+  x-fr:
+  - FR17
+  - FR18
+  - FR19
+  - FR20
+  x-br:
+  - BR05
+  parameters:
+  - $ref: '#/components/parameters/RideId'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/UpdateRideStatusRequest'
+  responses:
+    '200':
+      description: Cập nhật trạng thái thành công
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Ride'
+    '400':
+      description: Trạng thái không hợp lệ
+    '409':
+      description: Không thể chuyển trạng thái
